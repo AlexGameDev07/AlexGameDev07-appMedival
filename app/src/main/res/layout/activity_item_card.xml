@@ -30,14 +30,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
-            app:srcCompat="@drawable/ic_update" />
+            app:srcCompat="@drawable/ic_editar" />
 
         <ImageView
             android:id="@+id/img_borrar"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0.1"
-            app:srcCompat="@drawable/ic_delete" />
+            app:srcCompat="@drawable/ic_eliminar" />
     </LinearLayout>
 
 
