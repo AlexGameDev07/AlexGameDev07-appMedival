@@ -34,11 +34,11 @@ class Adapter (private var Data: List<DataClassPacientes>) : RecyclerView.Adapte
             //crear un objeto e la clase conexion
             val objConexion=Connection().Connect()
 
-            val statementDelPaciente = objConexion?.prepareStatement("DELETE FROM TB_Pacientes WHERE ID_Paciente = ?")!!
+            val statementDelPaciente = objConexion?.prepareStatement("BEGIN PROC_DELT_Pacientes(?)")!!
             statementDelPaciente.setInt( 1,idPaciente)
             statementDelPaciente.executeUpdate()
 
-            val commit = objConexion.prepareStatement( "commit")!!
+            val commit = objConexion.prepareStatement( "COMMIT")!!
             commit.executeUpdate()
         }
         Data=listaDatos.toList()
@@ -46,7 +46,7 @@ class Adapter (private var Data: List<DataClassPacientes>) : RecyclerView.Adapte
         notifyDataSetChanged()
     }
 
-    fun ActualizarInfoPacientes(nombreProducto: String, uuid: String){
+    fun ActualizarPacientes(ID_Paciente: Number, Nombres: String, Apellidos: String, Edad: Number, Num_Habitación: Number){
 
         //1- CREO UNA CORRUTINA
         GlobalScope.launch(Dispatchers.IO){
