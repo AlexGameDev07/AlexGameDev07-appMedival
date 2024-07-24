@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -45,14 +44,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Aplicar cada: "
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    tools:ignore="TextSizeCheck" />
 
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="6"
                     android:inputType="numberSigned"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
 
                 <TextView
@@ -61,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="horas"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    tools:ignore="HardcodedText,TextSizeCheck" />
             </LinearLayout>
 
 

@@ -4,6 +4,7 @@ import Model.Connection
 import Model.DataClassPacientes
 import alejando.murcia.jesus.arce.medival.PacientesActivity
 import alejando.murcia.jesus.arce.medival.R
+import alejando.murcia.jesus.arce.medival.R.layout.activity_item_card
 import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
@@ -15,23 +16,23 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter<RecyclerViewHelper.PacientesViewHolder>() {
+class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : RecyclerView.Adapter<PacientesViewHolder>() {
 
     fun RecargarVista(newDataList: List<DataClassPacientes>){
-        Data = newDataList
+        PacientData = newDataList
         notifyDataSetChanged()
     }
 
     fun actualizarListaDespuesDeActualizarDatos(idPacientes: Int, nuevoNombre: String){
-        val index = Data.indexOfFirst { it.idPacientes == idPacientes }
-        Data[index].nombres= nuevoNombre
+        val index = PacientData.indexOfFirst { it.idPacientes == idPacientes }
+        PacientData[index].nombres= nuevoNombre
         notifyItemChanged(index)
     }
 
     fun eliminarRegistro(ID_Pacientes:Int,position: Int){
 
         //quitar el elementpo de la lista
-        val listaDatos = Data.toMutableList()
+        val listaDatos = PacientData.toMutableList()
         listaDatos.removeAt(position)
 
         //quitar de la base de datos
@@ -47,14 +48,14 @@ class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerVie
             val commit = objConexion.prepareStatement( "commit")!!
             commit.executeUpdate()
         }
-        Data=listaDatos.toList()
+        PacientData=listaDatos.toList()
         notifyItemRemoved(position)
         notifyDataSetChanged()
 
 
     }
 
-    fun actualizarProducto(Nombres: String, Apellidos: String, Edad: Int, NumCama: Int, ID_Paciente: Int){
+    fun actualizarProducto(ID_Paciente: Int, Nombres: String, Apellidos: String, Edad: Int, NumHabitacion: Int, NumCama: Int){
 
         //1- CREO UNA CORRUTINA
         GlobalScope.launch(Dispatchers.IO){
@@ -63,12 +64,13 @@ class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerVie
             val objConexion = Connection().Connect()
 
             //2- Creo una variable un prepareStatement
-            val updateProducto = objConexion?.prepareStatement("update TB_Pacientes set Nombres = ? Apellidos = ? Edad = ? Num_Cama = ? where uuid =?")!!
+            val updateProducto = objConexion?.prepareStatement("update TB_Pacientes set Nombres = ? Apellidos = ? Edad = ? Num_Habitación = ? Num_Cama = ? where ID_Paciente =?")!!
             updateProducto.setString(1, Nombres)
             updateProducto.setString(2, Apellidos)
             updateProducto.setInt(3, Edad)
-            updateProducto.setInt(4, NumCama)
-            updateProducto.setInt(5, ID_Paciente)
+            updateProducto.setInt(4, NumHabitacion)
+            updateProducto.setInt(5, NumCama)
+            updateProducto.setInt(6, ID_Paciente)
             updateProducto.executeUpdate()
 
             val commit = objConexion.prepareStatement("commit")!!
@@ -80,18 +82,18 @@ class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerVie
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHelper.PacientesViewHolder {
-        val vista = LayoutInflater.from(parent.context).inflate(R.layout.activity_item_card, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PacientesViewHolder {
+        val vista = LayoutInflater.from(parent.context).inflate(activity_item_card, parent, false)
         return PacientesViewHolder(vista)
     }
 
-    override fun getItemCount() = Data.size
+    override fun getItemCount() = PacientData.size
 
     override fun onBindViewHolder(holder: PacientesViewHolder, position: Int) {
-        val pacientes = Data[position]
+        val pacientes = PacientData[position]
         holder.textView.text = pacientes.nombres
 
-        val item =Data[position]
+        val item =PacientData[position]
 
 
         holder.imgBorrar.setOnClickListener {
@@ -142,8 +144,7 @@ class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerVie
             pacientesActivity.putExtra("Edad", item.edad)
             pacientesActivity.putExtra("NumCama", item.numCama)
             pacientesActivity.putExtra("NumHabitacion", item.numHabitacion)
-            pacientesActivity.putExtra("Enfermedades", item.enfermedades)
-            pacientesActivity.putExtra("Medicamentos", item.medicamentos)
+
 
             context.startActivity(pacientesActivity)
         }
