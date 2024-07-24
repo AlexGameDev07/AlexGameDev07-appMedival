@@ -15,7 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class Adapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter<RecyclerViewHelper.ViewHolder>() {
+class PacientesAdapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter<RecyclerViewHelper.PacientesViewHolder>() {
 
     fun RecargarVista(newDataList: List<DataClassPacientes>){
         Data = newDataList
@@ -80,14 +80,14 @@ class Adapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHelper.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerViewHelper.PacientesViewHolder {
         val vista = LayoutInflater.from(parent.context).inflate(R.layout.activity_item_card, parent, false)
-        return RecyclerViewHelper.ViewHolder(vista)
+        return PacientesViewHolder(vista)
     }
 
     override fun getItemCount() = Data.size
 
-    override fun onBindViewHolder(holder: RecyclerViewHelper.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PacientesViewHolder, position: Int) {
         val pacientes = Data[position]
         holder.textView.text = pacientes.nombres
 
@@ -135,26 +135,17 @@ class Adapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter
 
             val context = holder.itemView.context
 
-            //Creo la alerta
-            val  builder = AlertDialog.Builder(context)
-            builder.setTitle("Editar nombre")
+            val pacientesActivity = Intent(context, PacientesActivity::class.java)
+            pacientesActivity.putExtra("ID_Paciente", item.idPacientes)
+            pacientesActivity.putExtra("Nombres", item.nombres)
+            pacientesActivity.putExtra("Apellidos", item.apellidos)
+            pacientesActivity.putExtra("Edad", item.edad)
+            pacientesActivity.putExtra("NumCama", item.numCama)
+            pacientesActivity.putExtra("NumHabitacion", item.numHabitacion)
+            pacientesActivity.putExtra("Enfermedades", item.enfermedades)
+            pacientesActivity.putExtra("Medicamentos", item.medicamentos)
 
-            //Agreguemos un cuadro de textos para que el usuario pueda escribir el nuevo nombre
-            val cuadritoNuevoNombre = EditText(context)
-            cuadritoNuevoNombre.setHint(item.nombres)
-            builder.setView(cuadritoNuevoNombre)
-
-            builder.setPositiveButton("Actualizar "){ dialog, wich ->
-                actualizarProducto(cuadritoNuevoNombre.text.toString(), item.apellidos, item.idPacientes, item.edad, item.numCama)
-
-            }
-
-            builder.setNegativeButton( "Cancelar"){ dialog, wich ->
-                dialog.dismiss()
-            }
-
-            val dialog = builder.create()
-            dialog.show()
+            context.startActivity(pacientesActivity)
         }
 
         //darle click a la card
