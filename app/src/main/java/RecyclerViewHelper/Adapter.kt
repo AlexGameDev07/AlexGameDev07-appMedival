@@ -51,6 +51,7 @@ class Adapter(private var Data: List<DataClassPacientes>) : RecyclerView.Adapter
         notifyItemRemoved(position)
         notifyDataSetChanged()
 
+
     }
 
     fun actualizarProducto(Nombres: String, Apellidos: String, Edad: Int, NumCama: Int, ID_Paciente: Int){
