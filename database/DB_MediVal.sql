@@ -77,12 +77,22 @@ CREATE OR REPLACE PROCEDURE PROC_INST_Pacientes (
     var_Apellidos IN TB_Pacientes.Apellidos%TYPE,
     var_Edad IN TB_Pacientes.Edad%TYPE,
     var_Num_Habitación IN TB_Pacientes.Num_Habitación%TYPE,
-    var_Num_Cama IN TB_Pacientes.Num_Cama%TYPE
+    var_Num_Cama IN TB_Pacientes.Num_Cama%TYPE,
+    var_Medicamento IN TB_Medicamentos.ID_Medicamento%TYPE,
+    var_Enfermedad IN TB_Enfermedades.ID_Enfermedad%TYPE
+    
 )
 IS
 BEGIN
 INSERT INTO TB_Pacientes(Nombres, Apellidos, Edad, Num_Habitación, Num_Cama)
 VALUES (var_Nombres, var_Apellidos, var_Edad, var_Num_Habitación, var_Num_Cama);
+
+INSERT INTO TB_Recetas(ID_Paciente, ID_Medicamento)
+VALUES ((SELECT ID_Paciente FROM(SELECT ID_Paciente FROM TB_Pacientes ORDER BY ID_Paciente DESC)WHERE ROWNUM = 1), var_Medicamento);
+
+INSERT INTO TB_Expedientes(ID_Paciente, ID_Enfermedad)
+VALUES ((SELECT ID_Paciente FROM (SELECT ID_Paciente FROM TB_Pacientes ORDER BY ID_Paciente DESC) WHERE ROWNUM = 1), var_Enfermedad);
+
 COMMIT WORK;
 END PROC_INST_Pacientes;
 /
@@ -132,6 +142,8 @@ VALUES (1,3);
 
 INSERT INTO TB_Expedientes(ID_Paciente, ID_Enfermedad)
 VALUES (2,5);
+
+COMMIT;
 
 /*
 DROP TABLE TB_Expedientes CASCADE CONSTRAINTS;
