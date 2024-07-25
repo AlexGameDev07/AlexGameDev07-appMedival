@@ -58,7 +58,7 @@
                 app:layout_constraintVertical_bias="0.017" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Apellido"
@@ -71,7 +71,7 @@
                 app:layout_constraintVertical_bias="0.103" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Edad"
@@ -84,7 +84,7 @@
                 app:layout_constraintVertical_bias="0.208" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtenfe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Enfermedad"
@@ -97,7 +97,7 @@
                 app:layout_constraintVertical_bias="0.327" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txthab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Numero de habitación"
@@ -110,7 +110,7 @@
                 app:layout_constraintVertical_bias="0.455" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtnumhabitacion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="396dp"
@@ -121,7 +121,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtcam"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Numero de cama"
@@ -134,7 +134,7 @@
                 app:layout_constraintVertical_bias="0.542" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtnumcama"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="472dp"
@@ -145,7 +145,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtmedi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Medicamentos asignados"
@@ -158,7 +158,7 @@
                 app:layout_constraintVertical_bias="0.65" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtmedicamentosasig"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="560dp"
@@ -169,7 +169,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txthorme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hora de la medicina"
@@ -182,7 +182,7 @@
                 app:layout_constraintVertical_bias="0.77" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txthoramedica"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="644dp"
@@ -193,7 +193,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtapellido"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="124dp"
@@ -204,7 +204,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtedad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="204dp"
@@ -215,7 +215,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtenfermedad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="304dp"
@@ -226,7 +226,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/txtno"
+                android:id="@+id/txtnombre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
