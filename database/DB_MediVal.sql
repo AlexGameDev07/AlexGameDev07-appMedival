@@ -86,7 +86,7 @@ VALUES (var_Nombres, var_Apellidos, var_Edad, var_Num_Habitación, var_Num_Cama);
 COMMIT WORK;
 END PROC_INST_Pacientes;
 /
-
+/*
 BEGIN
 PROC_INST_Pacientes(?,?,?,?,?);
 END;
@@ -95,7 +95,43 @@ END;
 BEGIN 
 PROC_DELT_Pacientes(?);
 END;
+*/
+INSERT INTO TB_Pacientes(Nombres, Apellidos, Edad, Num_Cama, Num_Habitación)
+VALUES ('Alejandro','Murcia', '17', '5','71');
+INSERT INTO TB_Pacientes(Nombres, Apellidos, Edad, Num_Cama, Num_Habitación)
+VALUES ('Michelle','Rosales', '17', '48','31');
 
+INSERT INTO TB_Enfermedades(Enfermedad) VALUES ('Gripe');
+INSERT INTO TB_Enfermedades(Enfermedad) VALUES ('Covid-19');
+INSERT INTO TB_Enfermedades(Enfermedad) VALUES ('Dengue');
+INSERT INTO TB_Enfermedades(Enfermedad) VALUES ('Alcheimer');
+INSERT INTO TB_Enfermedades(Enfermedad) VALUES ('Resfriado Común');
+
+INSERT INTO TB_Medicamentos(Medicamento) VALUES ('Clorfeniramina');
+INSERT INTO TB_Medicamentos(Medicamento) VALUES ('Acetaminofén');
+INSERT INTO TB_Medicamentos(Medicamento) VALUES ('Ibuprofeno');
+INSERT INTO TB_Medicamentos(Medicamento) VALUES ('Loratadina');
+INSERT INTO TB_Medicamentos(Medicamento) VALUES ('Jarabe para la tos');
+
+INSERT INTO TB_Recetas(Aplicación, ID_Medicamento, id_paciente)
+VALUES (6, 1,1);
+INSERT INTO TB_Recetas(Aplicación, ID_Medicamento, id_paciente)
+VALUES (8, 2,1);
+INSERT INTO TB_Recetas(Aplicación, ID_Medicamento, id_paciente)
+VALUES (12, 3,1);
+
+INSERT INTO TB_Recetas(Aplicación, ID_Medicamento, id_paciente)
+VALUES (8, 4,2);
+INSERT INTO TB_Recetas(Aplicación, ID_Medicamento, id_paciente)
+VALUES (8, 2,2);
+
+INSERT INTO TB_Expedientes(ID_Paciente, ID_Enfermedad)
+VALUES (1,1);
+INSERT INTO TB_Expedientes(ID_Paciente, ID_Enfermedad)
+VALUES (1,3);
+
+INSERT INTO TB_Expedientes(ID_Paciente, ID_Enfermedad)
+VALUES (2,5);
 
 /*
 DROP TABLE TB_Expedientes CASCADE CONSTRAINTS;

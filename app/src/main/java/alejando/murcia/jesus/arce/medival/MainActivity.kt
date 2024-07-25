@@ -9,7 +9,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -28,45 +27,57 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        //Elementos de la vista
+        // Elementos de la vista
         val btnAgregarPaciente = findViewById<Button>(R.id.btnAgregarPaciente)
         val rcvPacientes = findViewById<RecyclerView>(R.id.rcvPacientes)
 
-        /***** -Mostrar datos- ********************************************************************/
-
-        //Asignar un layuotu al rcv
+        // Asignar un layout al RecyclerView
         rcvPacientes.layoutManager = LinearLayoutManager(this)
 
-        //Funcion para obtener datos
-        fun GetPacientes(): List<DataClassPacientes> {
-            val objConnection = Connection().Connect()
-            val statement = objConnection?.createStatement()
-            val resultset = statement?.executeQuery("SELECT * FROM TB_Pacientes")!!
+        // Inicializar el adaptador con una lista vacía
+        var pacientsAdapter = PacientesAdapter(emptyList())
+        rcvPacientes.adapter = pacientsAdapter
 
+        // Funcion para obtener datos
+        fun getPacientes(): List<DataClassPacientes> {
             val pacientes = mutableListOf<DataClassPacientes>()
-            while (resultset.next()) {
-                val ID_Paciente = resultset.getInt("ID_Pacientes")
-                val Nombres = resultset.getString("Nombres")
-                val Apellidos = resultset.getString("Apellidos")
-                val Edad = resultset.getInt("Edad")
-                val NumCama = resultset.getInt("Num_Cama")
-                val NumHabitacion = resultset.getInt("Num_Habitacion")
-                val FullDataPacient = DataClassPacientes(ID_Paciente, Nombres, Apellidos, Edad, NumCama, NumHabitacion)
-                pacientes.add(FullDataPacient)
+            try {
+                val objConnection = Connection().Connect()
 
+                // Verifica que la conexión no sea nula
+                val statement = objConnection?.createStatement() ?: throw NullPointerException("La conexión a la base de datos es nula.")
+                val resultSet = statement.executeQuery("SELECT * FROM TB_Pacientes")
+
+                while (resultSet.next()) {
+                    val idPaciente = resultSet.getInt("ID_Paciente")
+                    val nombres = resultSet.getString("Nombres")
+                    val apellidos = resultSet.getString("Apellidos")
+                    val edad = resultSet.getInt("Edad")
+                    val numCama = resultSet.getInt("Num_Cama")
+                    val numHabitacion = resultSet.getInt("Num_Habitación")
+
+                    val fullDataPaciente = DataClassPacientes(idPaciente, nombres, apellidos, edad, numHabitacion, numCama)
+                    pacientes.add(fullDataPaciente)
+                }
+
+                resultSet.close()
+                statement.close()
+                objConnection.close()
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Manejar la excepción adecuadamente
             }
+
             return pacientes
         }
 
-        //Asignar un adaptador
-        CoroutineScope(Dispatchers.IO).launch{
-            val Pacientes = GetPacientes()
-            withContext(Dispatchers.Main){
-                val PacientsAdapter = PacientesAdapter(Pacientes)
-                rcvPacientes.adapter = PacientsAdapter
+        // Obtener datos y actualizar el adaptador
+        CoroutineScope(Dispatchers.IO).launch {
+            val pacientes = getPacientes()
+            withContext(Dispatchers.Main) {
+                pacientsAdapter = PacientesAdapter(pacientes)
             }
         }
-
-
     }
 }
