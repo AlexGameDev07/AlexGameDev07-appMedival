@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -25,24 +27,32 @@ class AgregarPacientesActivity : AppCompatActivity() {
 
     fun AgregarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText, ID_Medicamento: Int, ID_Enfermedad: Int) {
         val connection = Connection().Connect()
-        val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?,?,?)}"
-        val executeTrigger = connection?.prepareStatement(sqlTrig)
-        executeTrigger?.setString(1, txtNombres.text.toString())
-        executeTrigger?.setString(2, txtApellidos.text.toString())
-        executeTrigger?.setInt(3, txtEdad.text.toString().toInt())
-        executeTrigger?.setInt(4, txtNumHaiación.text.toString().toInt())
-        executeTrigger?.setInt(5, txtNumCama.text.toString().toInt())
-        executeTrigger?.setInt(6, ID_Medicamento)
-        executeTrigger?.setInt(7, ID_Enfermedad)
-        executeTrigger?.execute()
+        val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?)}"
+        val executeProcedure = connection?.prepareStatement(sqlTrig)
+        executeProcedure?.setString(1, txtNombres.text.toString())
+        executeProcedure?.setString(2, txtApellidos.text.toString())
+        executeProcedure?.setInt(3, txtEdad.text.toString().toInt())
+        executeProcedure?.setInt(4, txtNumHaiación.text.toString().toInt())
+        executeProcedure?.setInt(5, txtNumCama.text.toString().toInt())
+        executeProcedure?.execute()
 
+        val statement = connection?.createStatement()
+        val resultset = statement?.executeQuery("(SELECT ID_Paciente FROM(SELECT ID_Paciente FROM TB_Pacientes ORDER BY ID_Paciente DESC)WHERE ROWNUM = 1)")
+        resultset?.next()
+        val ID_Paciente = resultset?.getInt("ID_Paciente")!!
+        val insertarReceta = connection?.prepareStatement("INSERT INTO TB_Recetas(ID_Paciente,ID_Medicamento, Aplicación) VALUES (?,?,?)")
+        insertarReceta?.setInt(1, ID_Paciente)
+        insertarReceta?.setInt(2, ID_Medicamento)
+        insertarReceta?.setInt(3, 6) //Esto es momentaneo
+        insertarReceta?.execute()
+
+        val insertarExpediente = connection?.prepareStatement("INSERT INTO TB_Expedientes(ID_Paciente,ID_Enfermedad) VALUES (?,?)")
+        insertarExpediente?.setInt(1, ID_Paciente)
+        insertarExpediente?.setInt(2, ID_Enfermedad)
+        insertarExpediente?.execute()
 
         val commit = connection?.prepareStatement("commit")!!
         commit.executeUpdate()
-
-
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,8 +148,23 @@ class AgregarPacientesActivity : AppCompatActivity() {
 
         //eventos de los botones
         btnInsertarPaciente.setOnClickListener {
+            try {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val enfermedad = GetEnfermedades()
+                    val medicamento = GetMedicamentos()
 
-            AgregarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama)
+                    AgregarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama, medicamento[spnMedicamentos.selectedItemPosition].ID_Medicamento, enfermedad[spnEnfermedad.selectedItemPosition].ID_Enfermedad)
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(this@AgregarPacientesActivity, "Paciente Agregado correctamente", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+            }catch (ex: Exception){
+                println(ex.message)
+            }
+
+
         }
         btnAgregarMedicamento.setOnClickListener {
 
