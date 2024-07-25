@@ -238,7 +238,7 @@
                 app:layout_constraintVertical_bias="0.06" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btndetallepa"
                 android:layout_width="153dp"
                 android:layout_height="59dp"
                 android:text="Regresar"
