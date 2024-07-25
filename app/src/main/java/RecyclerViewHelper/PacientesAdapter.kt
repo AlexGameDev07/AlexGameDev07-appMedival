@@ -8,6 +8,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -29,26 +30,32 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
     fun eliminarRegistro(ID_Pacientes:Int,position: Int){
 
-        //quitar el elementpo de la lista
-        val listaDatos = PacientData.toMutableList()
-        listaDatos.removeAt(position)
+        try{
+            //quitar el elementpo de la lista
+            val listaDatos = PacientData.toMutableList()
+            listaDatos.removeAt(position)
 
-        //quitar de la base de datos
-        GlobalScope.launch(Dispatchers.IO) {
+            //quitar de la base de datos
+            GlobalScope.launch(Dispatchers.IO) {
 
-            //crear un objeto e la clase conexion
-            val objConexion=Connection().Connect()
+                //crear un objeto e la clase conexion
+                val objConexion=Connection().Connect()
 
-            val deletePaciente = objConexion?.prepareStatement("DELETE TB_Pacientes WHERE idPaciente = ?")!!
-            deletePaciente.setInt( 1,ID_Pacientes)
-            deletePaciente.executeUpdate()
+                val deletePaciente = objConexion?.prepareStatement("DELETE TB_Pacientes WHERE ID_Paciente = ?")!!
+                deletePaciente.setInt( 1,ID_Pacientes)
+                deletePaciente.executeUpdate()
 
-            val commit = objConexion.prepareStatement( "commit")!!
-            commit.executeUpdate()
+                val commit = objConexion.prepareStatement( "commit")!!
+                commit.executeUpdate()
+            }
+            PacientData=listaDatos.toList()
+            notifyItemRemoved(position)
+            notifyDataSetChanged()
         }
-        PacientData=listaDatos.toList()
-        notifyItemRemoved(position)
-        notifyDataSetChanged()
+        catch (ex:Exception){
+            println("este es el error que te explota la app loco $ex.message")
+        }
+
 
 
     }
@@ -98,36 +105,43 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
             //craeamos una alaerta
 
             //invocamos  el contexto
-            val context = holder.itemView.context
+            try{
+                val context = holder.itemView.context
 
-            //CREO LA ALERTA
+                //CREO LA ALERTA
 
-            val builder = AlertDialog.Builder(context)
+                val builder = AlertDialog.Builder(context)
 
-            //le ponemos titulo a la alerta
+                //le ponemos titulo a la alerta
 
-            builder.setTitle("¿estas seguro?")
+                builder.setTitle("¿estas seguro?")
 
-            //ponerle mendsaje a la alerta
+                //ponerle mendsaje a la alerta
 
-            builder.setMessage("Deseas en verdad eliminar el registro")
+                builder.setMessage("Deseas en verdad eliminar el registro")
 
-            //agrgamos los botones
+                //agrgamos los botones
 
-            builder.setPositiveButton("si"){dialog,wich ->
-                eliminarRegistro(item.idPacientes,position)
+                builder.setPositiveButton("si"){dialog,wich ->
+                    eliminarRegistro(item.idPacientes,position)
+                }
+
+                builder.setNegativeButton("no"){dialog,wich ->
+
+                }
+
+                //cramos la alerta
+                val alertDialog=builder.create()
+
+                //mostramos la alerta
+
+                alertDialog.show()
+
+                Toast.makeText(context, "Paciente eliminado satisfactoriamente", Toast.LENGTH_SHORT).show()
+            }catch (ex:Exception){
+                println("este es el error que te explota la app loco $ex.message")
             }
 
-            builder.setNegativeButton("no"){dialog,wich ->
-
-            }
-
-            //cramos la alerta
-            val alertDialog=builder.create()
-
-            //mostramos la alerta
-
-            alertDialog.show()
 
         }
 
