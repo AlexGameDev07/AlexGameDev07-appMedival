@@ -156,6 +156,7 @@ class AgregarPacientesActivity : AppCompatActivity() {
                     AgregarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama, medicamento[spnMedicamentos.selectedItemPosition].ID_Medicamento, enfermedad[spnEnfermedad.selectedItemPosition].ID_Enfermedad)
                     withContext(Dispatchers.Main){
                         Toast.makeText(this@AgregarPacientesActivity, "Paciente Agregado correctamente", Toast.LENGTH_SHORT).show()
+                        finish()
                     }
 
                 }

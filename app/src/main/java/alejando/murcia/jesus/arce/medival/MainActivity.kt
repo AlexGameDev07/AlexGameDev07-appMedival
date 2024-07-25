@@ -81,6 +81,8 @@ class MainActivity : AppCompatActivity() {
         btnAgregarPaciente.setOnClickListener {
             val pacientesActivity = Intent(this, AgregarPacientesActivity::class.java)
             startActivity(pacientesActivity)
+
+
         }
 
     }
