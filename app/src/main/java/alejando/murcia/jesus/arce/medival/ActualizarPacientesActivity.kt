@@ -3,6 +3,7 @@ package alejando.murcia.jesus.arce.medival
 import Model.Connection
 import Model.DataClassEnfermedades
 import Model.DataClassMedicamentos
+import android.database.AbstractCursor
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -22,31 +23,27 @@ import kotlinx.coroutines.withContext
 
 class ActualizarPacientesActivity : AppCompatActivity() {
 
-        fun ActualizarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText, ID_Medicamento: Int, ID_Enfermedad: Int) {
+        fun ActualizarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText, ID_Medicamento: Int, ID_Enfermedad: Int, ID_Paciente: Int) {
             val connection = Connection().Connect()
-            val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?)}"
-            val executeProcedure = connection?.prepareStatement(sqlTrig)
-            executeProcedure?.setString(1, txtNombres.text.toString())
-            executeProcedure?.setString(2, txtApellidos.text.toString())
-            executeProcedure?.setInt(3, txtEdad.text.toString().toInt())
-            executeProcedure?.setInt(4, txtNumHaiación.text.toString().toInt())
-            executeProcedure?.setInt(5, txtNumCama.text.toString().toInt())
-            executeProcedure?.execute()
 
-            val statement = connection?.createStatement()
-            val resultset = statement?.executeQuery("(SELECT ID_Paciente FROM(SELECT ID_Paciente FROM TB_Pacientes ORDER BY ID_Paciente DESC)WHERE ROWNUM = 1)")
-            resultset?.next()
-            val ID_Paciente = resultset?.getInt("ID_Paciente")!!
-            val insertarReceta = connection?.prepareStatement("INSERT INTO TB_Recetas(ID_Paciente,ID_Medicamento, Aplicación) VALUES (?,?,?)")
-            insertarReceta?.setInt(1, ID_Paciente)
-            insertarReceta?.setInt(2, ID_Medicamento)
-            insertarReceta?.setInt(3, 6) //Esto es momentaneo
-            insertarReceta?.execute()
+            val ActualizarPaciente = connection?.prepareStatement("UPDATE TB_Pacientes SET Nombres = ?, Apellidos = ?, Edad = ?, Num_Habitación = ?, Num_Cama = ? WHERE ID_Paciente = ?")!!
+            ActualizarPaciente?.setString(1, txtNombres.text.toString())
+            ActualizarPaciente?.setString(2, txtApellidos.text.toString())
+            ActualizarPaciente?.setInt(3, txtEdad.text.toString().toInt())
+            ActualizarPaciente?.setInt(4, txtNumHaiación.text.toString().toInt())
+            ActualizarPaciente?.setInt(5, txtNumCama.text.toString().toInt() )
+            ActualizarPaciente?.setInt(6, ID_Paciente)
+            ActualizarPaciente?.executeUpdate()
 
-            val insertarExpediente = connection?.prepareStatement("INSERT INTO TB_Expedientes(ID_Paciente,ID_Enfermedad) VALUES (?,?)")
-            insertarExpediente?.setInt(1, ID_Paciente)
-            insertarExpediente?.setInt(2, ID_Enfermedad)
-            insertarExpediente?.execute()
+            val ActualizarReceta = connection?.prepareStatement("UPDATE TB_Recetas SET ID_Medicamento = ? WHERE ID_Paciente = ?")!!
+            ActualizarReceta.setInt(1,ID_Medicamento)
+            ActualizarReceta.setInt(2,ID_Paciente)
+            ActualizarPaciente.executeUpdate()
+
+            val ActualizarExpediente = connection?.prepareStatement("UPDATE TB_Expedientes SET ID_Enfermendad = ? WHERE ID_Paciente = ?")!!
+            ActualizarExpediente.setInt(1, ID_Enfermedad)
+            ActualizarExpediente.setInt(2, ID_Paciente)
+            ActualizarPaciente.executeUpdate()
 
             val commit = connection?.prepareStatement("commit")!!
             commit.executeUpdate()
@@ -81,6 +78,25 @@ class ActualizarPacientesActivity : AppCompatActivity() {
             val spnEnfermedad = findViewById<Spinner>(R.id.spnEnfermedadActualizar)
 
             val btnRegresar = findViewById<ImageView>(R.id.btnRegresar)
+
+            /////// -Poner datos de los intent- ////////////////////////////////////////////////////////
+
+            val ID_Paciente = intent.getIntExtra("ID_Paciente", 1)
+            val Nombre = intent.getStringExtra("Nombres")
+            val Apellidos = intent.getStringExtra("Apellidos")
+            val Edad = intent.getIntExtra("Edad", 1)
+            val NumCama = intent.getIntExtra("NumCama", 1)
+            val Num_Habitación = intent.getIntExtra("Num_Habitación", 1)
+
+            txtNombres.setText(Nombre)
+            txtApellidos.setText(Apellidos)
+            txtEdad.setText(Edad.toString())
+            txtNumCama.setText(NumCama.toString())
+            txtNumHaiación.setText(Num_Habitación.toString())
+
+
+
+
 
             /////// -Programar el FidgetSpinner- ///////////////////////////////////////////////////////
 
@@ -151,10 +167,12 @@ class ActualizarPacientesActivity : AppCompatActivity() {
                         val enfermedad = GetEnfermedades()
                         val medicamento = GetMedicamentos()
 
-                        ActualizarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama, medicamento[spnMedicamentos.selectedItemPosition].ID_Medicamento, enfermedad[spnEnfermedad.selectedItemPosition].ID_Enfermedad)
+                        ActualizarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama, medicamento[spnMedicamentos.selectedItemPosition].ID_Medicamento, enfermedad[spnEnfermedad.selectedItemPosition].ID_Enfermedad, ID_Paciente)
                         withContext(Dispatchers.Main){
-                            Toast.makeText(this@ActualizarPacientesActivity, "Paciente Agregado correctamente", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ActualizarPacientesActivity, "Paciente Actualizado correctamente", Toast.LENGTH_SHORT).show()
                             finish()
+
+                            
                         }
 
                     }

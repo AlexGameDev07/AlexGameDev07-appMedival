@@ -145,6 +145,8 @@ VALUES (2,5);
 
 COMMIT;
 
+Select * from tb_Pacientes;
+
 /*
 DROP TABLE TB_Expedientes CASCADE CONSTRAINTS;
 DROP TABLE TB_Recetas CASCADE CONSTRAINTS;

@@ -7,7 +7,7 @@ import java.sql.DriverManager
 class Connection {
     fun Connect(): Connection?{
         try {
-            val url="jdbc:oracle:thin:@192.168.1.23:1521:xe"
+            val url="jdbc:oracle:thin:@192.168.56.1:1521:xe"
             val user="AlexDev"
             val password="lmq0MXbL"
 

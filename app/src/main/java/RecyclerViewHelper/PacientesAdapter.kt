@@ -40,7 +40,6 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
                 //crear un objeto e la clase conexion
                 val objConexion=Connection().Connect()
-
                 val deletePaciente = objConexion?.prepareStatement("DELETE TB_Pacientes WHERE ID_Paciente = ?")!!
                 deletePaciente.setInt( 1,ID_Pacientes)
                 deletePaciente.executeUpdate()
@@ -60,7 +59,7 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
     }
 
-    fun actualizarProducto(ID_Paciente: Int, Nombres: String, Apellidos: String, Edad: Int, NumHabitacion: Int, NumCama: Int){
+    fun AcualizarPaciente(ID_Paciente: Int, Nombres: String, Apellidos: String, Edad: Int, NumHabitacion: Int, NumCama: Int){
 
         //1- CREO UNA CORRUTINA
         GlobalScope.launch(Dispatchers.IO){
@@ -167,20 +166,21 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
             //Cambiamos de pantalla
             //Abro la pantalla de productos
-            val pantallaDetalles = Intent(context, ActualizarPacientesActivity::class.java)
+            val ActualizarPacientesActivity = Intent(context, ActualizarPacientesActivity::class.java)
 
             //Abriremos la pantalla
             //Pero antes mandamos los parametros
 
-            pantallaDetalles.putExtra("ID_Paciente", item.idPacientes )
-            pantallaDetalles.putExtra("Nombres", item.nombres)
-            pantallaDetalles.putExtra("Apellidos", item.apellidos)
-            pantallaDetalles.putExtra("Edad", item.edad)
-            pantallaDetalles.putExtra("NumCama", item.numCama)
+            ActualizarPacientesActivity.putExtra("ID_Paciente", item.idPacientes )
+            ActualizarPacientesActivity.putExtra("Nombres", item.nombres)
+            ActualizarPacientesActivity.putExtra("Apellidos", item.apellidos)
+            ActualizarPacientesActivity.putExtra("Edad", item.edad)
+            ActualizarPacientesActivity.putExtra("NumCama", item.numCama)
+            ActualizarPacientesActivity.putExtra("Num_Habitación", item.numHabitacion)
 
             //Inicializamos la actividad
 
-            context.startActivity(pantallaDetalles)
+            context.startActivity(ActualizarPacientesActivity)
         }
 
     }

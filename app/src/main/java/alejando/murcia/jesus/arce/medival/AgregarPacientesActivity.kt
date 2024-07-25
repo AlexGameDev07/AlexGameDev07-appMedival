@@ -27,8 +27,8 @@ class AgregarPacientesActivity : AppCompatActivity() {
 
     fun AgregarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText, ID_Medicamento: Int, ID_Enfermedad: Int) {
         val connection = Connection().Connect()
-        val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?)}"
-        val executeProcedure = connection?.prepareStatement(sqlTrig)
+        val sqlProcedure = "{call PROC_INST_Pacientes(?,?,?,?,?)}"
+        val executeProcedure = connection?.prepareStatement(sqlProcedure)
         executeProcedure?.setString(1, txtNombres.text.toString())
         executeProcedure?.setString(2, txtApellidos.text.toString())
         executeProcedure?.setInt(3, txtEdad.text.toString().toInt())
