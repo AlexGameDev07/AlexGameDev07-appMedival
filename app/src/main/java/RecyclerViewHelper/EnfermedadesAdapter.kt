@@ -1,0 +1,5 @@
+package RecyclerViewHelper
+
+class EnfermedadesAdapter {
+
+}

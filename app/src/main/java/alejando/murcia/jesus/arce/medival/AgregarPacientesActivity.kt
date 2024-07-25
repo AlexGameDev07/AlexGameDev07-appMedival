@@ -23,16 +23,24 @@ import kotlinx.coroutines.withContext
 
 class AgregarPacientesActivity : AppCompatActivity() {
 
-    fun AgregarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText) {
+    fun AgregarPaciente(txtNombres: EditText, txtApellidos: EditText, txtEdad: EditText, txtNumHaiación: EditText, txtNumCama: EditText, ID_Medicamento: Int, ID_Enfermedad: Int) {
         val connection = Connection().Connect()
-        val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?)}"
+        val sqlTrig = "{call PROC_INST_Pacientes(?,?,?,?,?,?,?)}"
         val executeTrigger = connection?.prepareStatement(sqlTrig)
         executeTrigger?.setString(1, txtNombres.text.toString())
         executeTrigger?.setString(2, txtApellidos.text.toString())
         executeTrigger?.setInt(3, txtEdad.text.toString().toInt())
         executeTrigger?.setInt(4, txtNumHaiación.text.toString().toInt())
         executeTrigger?.setInt(5, txtNumCama.text.toString().toInt())
+        executeTrigger?.setInt(6, ID_Medicamento)
+        executeTrigger?.setInt(7, ID_Enfermedad)
         executeTrigger?.execute()
+
+
+        val commit = connection?.prepareStatement("commit")!!
+        commit.executeUpdate()
+
+
 
 
     }
@@ -124,7 +132,7 @@ class AgregarPacientesActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 //Crear y modificar adaptador
                 val myAdapter = ArrayAdapter(this@AgregarPacientesActivity, android.R.layout.simple_spinner_dropdown_item, Enfermedad)
-                spnMedicamentos.adapter = myAdapter
+                spnEnfermedad.adapter = myAdapter
             }
         }
 
