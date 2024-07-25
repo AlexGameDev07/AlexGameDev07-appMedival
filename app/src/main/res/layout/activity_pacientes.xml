@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#D9EBFA"
-    tools:context=".PacientesActivity">
+    tools:context=".ActualizarPacientesActivity">
 
     <ImageView
         android:id="@+id/imageView"

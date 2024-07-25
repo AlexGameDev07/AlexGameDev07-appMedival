@@ -1,8 +1,12 @@
 package alejando.murcia.jesus.arce.medival
 
 import Model.Connection
+import Model.DataClassEnfermedades
+import Model.DataClassMedicamentos
 import android.os.Bundle
 import android.provider.ContactsContract.AggregationExceptions
+import android.provider.Settings.Global
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -12,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AgregarPacientesActivity : AppCompatActivity() {
 
@@ -58,9 +66,71 @@ class AgregarPacientesActivity : AppCompatActivity() {
 
         val btnRegresar = findViewById<ImageView>(R.id.btnRegresar)
 
+        /////// -Programar el FidgetSpinner- ///////////////////////////////////////////////////////
+
+        fun GetMedicamentos(): List<DataClassMedicamentos> {
+            val objConnection = Connection().Connect()
+            val statement = objConnection?.createStatement()
+            val resultset = statement?.executeQuery("SELECT * FROM TB_Medicamentos")
+            val listadoMedicamentos = mutableListOf<DataClassMedicamentos>()
+            while (resultset?.next() == true) {
+                val ID_Medicamento = resultset.getInt("ID_Medicamento")
+                val medicamento = resultset.getString("Medicamento")
+                val FullDataMedicamento = DataClassMedicamentos(ID_Medicamento, medicamento)
+                listadoMedicamentos.add(FullDataMedicamento)
+            }
+            resultset?.close()
+            statement?.close()
+            objConnection?.close()
+            return listadoMedicamentos
+        }
+
+        fun GetEnfermedades(): List<DataClassEnfermedades> {
+            val objConnection = Connection().Connect()
+            val statement = objConnection?.createStatement()
+            val resultset = statement?.executeQuery("SELECT * FROM TB_Enfermedades")
+            val listadoEnfermedades = mutableListOf<DataClassEnfermedades>()
+            while (resultset?.next() == true) {
+                val ID_Enfermedad = resultset.getInt("ID_Enfermedad")
+                val Enfermedad = resultset.getString("Enfermedad")
+                val FullDataEnfermedad = DataClassEnfermedades(ID_Enfermedad, Enfermedad)
+                listadoEnfermedades.add(FullDataEnfermedad)
+            }
+            resultset?.close()
+            statement?.close()
+            objConnection?.close()
+            return listadoEnfermedades
+        }
+
+        //Programar el spnMedicamentos
+        CoroutineScope(Dispatchers.IO).launch {
+            //Obtengo los datos
+            val listadoMedicamento = GetMedicamentos()
+            val Medicamento =listadoMedicamento.map { it.Medicamento }
+
+            withContext(Dispatchers.Main) {
+                //Crear y modificar adaptador
+                val myAdapter = ArrayAdapter(this@AgregarPacientesActivity, android.R.layout.simple_spinner_dropdown_item, Medicamento)
+                spnMedicamentos.adapter = myAdapter
+            }
+        }
+
+        //Programar el spnEnfermedades
+        CoroutineScope(Dispatchers.IO).launch {
+            //Obtengo los datos
+            val listadoEnfermedades = GetEnfermedades()
+            val Enfermedad =listadoEnfermedades.map { it.Enfermedad }
+
+            withContext(Dispatchers.Main) {
+                //Crear y modificar adaptador
+                val myAdapter = ArrayAdapter(this@AgregarPacientesActivity, android.R.layout.simple_spinner_dropdown_item, Enfermedad)
+                spnMedicamentos.adapter = myAdapter
+            }
+        }
 
         //eventos de los botones
         btnInsertarPaciente.setOnClickListener {
+
             AgregarPaciente(txtNombres, txtApellidos, txtEdad, txtNumHaiación, txtNumCama)
         }
         btnAgregarMedicamento.setOnClickListener {

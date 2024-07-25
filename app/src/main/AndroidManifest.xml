@@ -27,7 +27,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".PacientesActivity"
+            android:name=".ActualizarPacientesActivity"
             android:exported="false" />
         <activity
             android:name=".item_card"

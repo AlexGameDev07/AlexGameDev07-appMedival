@@ -2,14 +2,12 @@ package RecyclerViewHelper
 
 import Model.Connection
 import Model.DataClassPacientes
-import alejando.murcia.jesus.arce.medival.PacientesActivity
-import alejando.murcia.jesus.arce.medival.R
+import alejando.murcia.jesus.arce.medival.ActualizarPacientesActivity
 import alejando.murcia.jesus.arce.medival.R.layout.activity_item_card
 import android.app.AlertDialog
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -137,7 +135,7 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
             val context = holder.itemView.context
 
-            val pacientesActivity = Intent(context, PacientesActivity::class.java)
+            val pacientesActivity = Intent(context, ActualizarPacientesActivity::class.java)
             pacientesActivity.putExtra("ID_Paciente", item.idPacientes)
             pacientesActivity.putExtra("Nombres", item.nombres)
             pacientesActivity.putExtra("Apellidos", item.apellidos)
@@ -155,7 +153,7 @@ class PacientesAdapter(private var PacientData: List<DataClassPacientes>) : Recy
 
             //Cambiamos de pantalla
             //Abro la pantalla de productos
-            val pantallaDetalles = Intent(context, PacientesActivity::class.java)
+            val pantallaDetalles = Intent(context, ActualizarPacientesActivity::class.java)
 
             //Abriremos la pantalla
             //Pero antes mandamos los parametros
